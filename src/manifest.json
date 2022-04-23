@@ -3,7 +3,7 @@
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Tad Wohlrapp",
   "homepage_url": "https://github.com/tadwohlrapp/reddit-search-on-google",
   "icons": {

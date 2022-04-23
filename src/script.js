@@ -43,7 +43,7 @@ if (typeof trustedTypes !== 'undefined') {
   } else {
     el.appendChild(link);
     if (isActive) {
-      link.style.color = '#1a73e8';
+      link.style.color = document.body.dataset.dt ? '#8ab4f8' : '#1a73e8';
       const underline = document.createElement('div');
       underline.className = 'YTDezd';
       link.appendChild(underline);
