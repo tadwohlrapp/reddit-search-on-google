@@ -1,21 +1,11 @@
 # Reddit Search On Google
-A simple userscript that adds a button to your Google searches to show only Reddit posts. You can just click on the button and it will automatically add `site:reddit.com` to your search:
+A simple browser extension that adds a button to your Google searches to show only results from Reddit.
+Clicking the Reddit button adds `site:reddit.com` to your search (and clicking it again removes it).
 
-![Img](screenshot.png)
+![Screenshot](https://user-images.githubusercontent.com/2788192/164916535-0cb3eae2-1766-4363-9393-d465c121adfb.png)
 
-## Downloading the script
-The direct download link is here:
+This web extension is based on the awesome userschript [Reddit Search on Google](https://github.com/marioortizmanero/reddit-search-on-google) by [marioortizmanero](https://github.com/marioortizmanero).
 
-* [GreasyFork](https://greasyfork.org/en/scripts/381497-reddit-search-on-google)
+## Installation
 
-**Chrome users:** you'll need a script manager extension like [TamperMonkey](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/) (the one I'm currently using) or [GreaseMonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/). Then go to the download link above and click on 'Install X.X'. Finally, click on 'install' in the new window that will open.
-
-**Firefox users:** you'll need a script manager extension like [TamperMonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en). Then go to the download link above and click on 'Install X.X'. Finally, click on 'install' in the new window that will open.
-
-**Other browsers:** you can look for a script manager extension in your browser add-ons page. Look for Tampermonkey or Greasemonkey and install them. Then go to the download link above and click on 'Install X.X'. Finally, click on 'install' in the new window that will open.
-
-## Customizing the script
-There are a couple things you can change inside the script:
-
-* `useIcon` can be set to `false` if you don't want to see an icon inside the Reddit button. By default it's set to `true`
-* `appendRight` can be set to `true` if you want to append the Reddit button to the right of Google's buttons (next to 'Tools'). By default it's set to `false`, which appends it next to the usual buttons like 'Videos'.
+(TBA)
