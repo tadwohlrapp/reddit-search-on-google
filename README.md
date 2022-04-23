@@ -4,7 +4,7 @@ Clicking the Reddit button adds `site:reddit.com` to your search (and clicking i
 
 ![Screenshot](https://user-images.githubusercontent.com/2788192/164916535-0cb3eae2-1766-4363-9393-d465c121adfb.png)
 
-This web extension is based on the awesome userschript [Reddit Search on Google](https://github.com/marioortizmanero/reddit-search-on-google) by [marioortizmanero](https://github.com/marioortizmanero).
+This web extension is based on the awesome userscript [Reddit Search on Google](https://github.com/marioortizmanero/reddit-search-on-google) by [marioortizmanero](https://github.com/marioortizmanero).
 
 ## Installation
 
