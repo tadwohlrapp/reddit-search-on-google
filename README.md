@@ -8,4 +8,4 @@ This web extension is based on the awesome userscript [Reddit Search on Google](
 
 ## Installation
 
-(TBA)
+- [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/reddit-search-on-google/dinfdkpilnidebademfldlbpbjkemkod)
