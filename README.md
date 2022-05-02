@@ -9,3 +9,4 @@ This web extension is based on the awesome userscript [Reddit Search on Google](
 ## Installation
 
 - [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/reddit-search-on-google/dinfdkpilnidebademfldlbpbjkemkod)
+- [Install from Firefox Add-Ons](https://addons.mozilla.org/en-US/firefox/addon/reddit-search-on-google/)
