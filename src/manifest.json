@@ -3,9 +3,9 @@
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Tad Wohlrapp",
-  "homepage_url": "https://github.com/tadwohlrapp/reddit-search-on-google",
+  "homepage_url": "https://www.rsog.org/",
   "icons": {
     "16": "icon16.png",
     "32": "icon32.png",

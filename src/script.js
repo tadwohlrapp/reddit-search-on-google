@@ -12,6 +12,8 @@ if (typeof trustedTypes !== 'undefined') {
 }
 
 (function () {
+  'use strict';
+
   // Element
   let el = document.createElement('div');
   el.className = 'hdtb-mitem';
@@ -58,4 +60,114 @@ if (typeof trustedTypes !== 'undefined') {
     menuBar.appendChild(el);
   }
 
+  function cleanupResults() {
+    const results = document.querySelectorAll('#search .MjjYud:not([data-rsog])');
+    let postIdArr = [];
+    results.forEach((result) => {
+      try {
+        const link = result.querySelectorAll('a[href*="reddit.com/r/"][data-ved], a[href*="reddit.com/user/"][data-ved]');
+        if (link.length < 1) return;
+
+        const linkHrefText = link[0].getAttribute('href');
+        const linkElementsArray = linkHrefText.match(/.*\.reddit\.com\/(r|user)\/(.*?)\/((.*?)\/.*|$)/);
+        if (linkElementsArray.length < 1) return;
+
+        // Post Id
+        if (linkElementsArray[4] === 'comments') {
+          const postId = linkHrefText.match(/comments\/(.*?)\/(?:.*)\//)[1];
+          postIdArr.push('t3_' + postId);
+          result.dataset.postId = postId;
+        }
+
+        const arrowText = ' › ';
+        const subredditText = linkElementsArray[1].charAt(0) + '/' + linkElementsArray[2];
+        let pathText = linkElementsArray[4];
+
+        if (pathText) {
+          if (pathText === 'wiki') {
+            pathText = arrowText + linkElementsArray[3].replace(/\//, arrowText).replace(/\//, '');
+          } else {
+            pathText = arrowText + pathText;
+          }
+        } else {
+          pathText = ''
+        }
+
+        const breadcrumbs = result.querySelectorAll('span[role="text"]');
+        if (breadcrumbs.length > 1) {
+          breadcrumbs.forEach((breadcrumb) => {
+            const subredditSpan = document.createElement('span');
+            subredditSpan.style.fontWeight = 'bold';
+            subredditSpan.textContent = subredditText;
+            breadcrumb.textContent = arrowText;
+            breadcrumb.appendChild(subredditSpan);
+            breadcrumb.appendChild(document.createTextNode(pathText));
+          })
+        }
+
+        // Add CSS class to the thumbnail
+        result.dataset.rsog = true;
+
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    if (postIdArr.length < 1) return;
+    fetch(`https://api.reddit.com/api/info/?id=${postIdArr}`)
+      .then((response) => response.json())
+      .then((data) => {
+        for (const child of data.data.children) {
+          addApiData(child.data);
+        }
+      });
+  }
+
+  function addApiData(data) {
+    const result = document.querySelector(`div[data-post-id="${data.id}"]`);
+    if (!result) return;
+
+    const title = result.querySelector('h3');
+    title.title = decodeHtmlEntity(data.title);
+
+    const preview = result.querySelectorAll(['div[data-content-feature="1"], div[data-content-feature="2"].VGXe8'])[0];
+
+    const existingDatesArr = result.querySelectorAll('.MUxGbd.wuQ4Ob.WZ8Tjf');
+    if (existingDatesArr.length > 0) {
+      existingDatesArr.forEach((el) => {
+        el.remove();
+      })
+    }
+
+    const fluff = result.querySelector('[data-content-feature="2"]:not(.VGXe8)');
+    if (fluff) fluff.remove();
+
+    const locale = document.documentElement.lang;
+    const timestamp = new Date(data.created * 1000);
+    const formattedDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: "short" }) + ' ' + timestamp.getFullYear()
+
+    const additionalInfo = document.createElement('div');
+    additionalInfo.classList.add('MUxGbd', 'wuQ4Ob', 'WZ8Tjf');
+    additionalInfo.append(`${formattedDate} · ${data.score.toLocaleString(locale)} point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${data.num_comments.toLocaleString(locale)} comment${data.num_comments === 1 ? '' : 's'}`);
+
+    preview.prepend(additionalInfo)
+  }
+
+  function decodeHtmlEntity(text) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+  }
+
+  // Run script once on document ready
+  cleanupResults();
+
+  // Initialize new MutationObserver
+  const mutationObserver = new MutationObserver(cleanupResults);
+
+  // Let MutationObserver target the grid containing all thumbnails
+  const targetNode = document.querySelector('div#search');
+
+  // Run MutationObserver
+  mutationObserver.observe(targetNode, { childList: true, subtree: true });
 })();
