@@ -60,19 +60,19 @@ if (typeof trustedTypes !== 'undefined') {
     menuBar.appendChild(el);
   }
 
-  function cleanupResults() {
-    const results = document.querySelectorAll('#search .MjjYud:not([data-rsog])');
+  function enhanceResults() {
+    const results = document.querySelectorAll('#search div:not(.hlcw0c)>div.MjjYud:not([data-rsog]), #search div.hlcw0c div.g>div:first-child:not([data-rsog]), #search .MjjYud ul.FxLDp li.MYVUIe:not([data-rsog])');
+
     let postIdArr = [];
     results.forEach((result) => {
       try {
-        const link = result.querySelectorAll('a[href*="reddit.com/r/"][data-ved], a[href*="reddit.com/user/"][data-ved]');
-        if (link.length < 1) return;
+        const link = result.querySelectorAll('a[href*="reddit.com/r/"][data-ved], a[href*="reddit.com/t/"][data-ved], a[href*="reddit.com/user/"][data-ved]');
+        if (link.length < 1) return result.dataset.rsog = true;
 
         const linkHrefText = link[0].getAttribute('href');
-        const linkElementsArray = linkHrefText.match(/.*\.reddit\.com\/(r|user)\/(.*?)\/((.*?)\/.*|$)/);
+        const linkElementsArray = linkHrefText.match(/.*\.reddit\.com\/(r|t|user)\/(.*?)\/((.*?)\/.*|$)/);
         if (linkElementsArray.length < 1) return;
 
-        // Post Id
         if (linkElementsArray[4] === 'comments') {
           const postId = linkHrefText.match(/comments\/(.*?)\/(?:.*)\//)[1];
           postIdArr.push('t3_' + postId);
@@ -98,6 +98,8 @@ if (typeof trustedTypes !== 'undefined') {
           breadcrumbs.forEach((breadcrumb) => {
             const subredditSpan = document.createElement('span');
             subredditSpan.style.fontWeight = 'bold';
+            subredditSpan.style.letterSpacing = '0.3px';
+            subredditSpan.style.color = '#202124';
             subredditSpan.textContent = subredditText;
             breadcrumb.textContent = arrowText;
             breadcrumb.appendChild(subredditSpan);
@@ -105,7 +107,6 @@ if (typeof trustedTypes !== 'undefined') {
           })
         }
 
-        // Add CSS class to the thumbnail
         result.dataset.rsog = true;
 
       } catch (error) {
@@ -160,14 +161,5 @@ if (typeof trustedTypes !== 'undefined') {
   }
 
   // Run script once on document ready
-  cleanupResults();
-
-  // Initialize new MutationObserver
-  const mutationObserver = new MutationObserver(cleanupResults);
-
-  // Let MutationObserver target the grid containing all thumbnails
-  const targetNode = document.querySelector('div#search');
-
-  // Run MutationObserver
-  mutationObserver.observe(targetNode, { childList: true, subtree: true });
+  enhanceResults();
 })();
