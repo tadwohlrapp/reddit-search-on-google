@@ -2,7 +2,13 @@
 A simple browser extension that adds a button to your Google searches to show only results from Reddit.
 Clicking the Reddit button adds `site:reddit.com` to your search (and clicking it again removes it).
 
-![Screenshot](https://user-images.githubusercontent.com/2788192/164916535-0cb3eae2-1766-4363-9393-d465c121adfb.png)
+Additionally it calls the Reddit API and adds the following metadata to every Reddit post displayed:
+- Creation date
+- Score
+- Upvote ratio
+- Number of comments
+
+![Screenshot](screenshot.png)
 
 This web extension is based on the awesome userscript [Reddit Search on Google](https://github.com/marioortizmanero/reddit-search-on-google) by [marioortizmanero](https://github.com/marioortizmanero).
 
