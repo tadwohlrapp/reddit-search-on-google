@@ -1,9 +1,9 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Tad Wohlrapp",
   "homepage_url": "https://www.rsog.org/",
   "icons": {
@@ -12,11 +12,15 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{a34fce4f-655b-47dc-9dfa-9f9e1edee5b2}"
+    }
+  },
+  "permissions": ["https://api.reddit.com/api/info/*"],
   "content_scripts": [
     {
       "matches": [
-        // curl https://www.google.com/supported_domains | sed 's!\(.*\)!"*://*\1/search*",!g'
         "*://*.google.com/search*",
         "*://*.google.ad/search*",
         "*://*.google.ae/search*",
