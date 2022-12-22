@@ -99,7 +99,7 @@ if (typeof trustedTypes !== 'undefined') {
             const subredditSpan = document.createElement('span');
             subredditSpan.style.fontWeight = 'bold';
             subredditSpan.style.letterSpacing = '0.3px';
-            subredditSpan.style.color = '#202124';
+            subredditSpan.classList.add('lyLwlc');
             subredditSpan.textContent = subredditText;
             breadcrumb.textContent = arrowText;
             breadcrumb.appendChild(subredditSpan);
