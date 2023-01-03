@@ -153,28 +153,21 @@ if (typeof trustedTypes !== 'undefined') {
     const timestamp = new Date(data.created * 1000);
     const prettyDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: "short" }) + ' ' + timestamp.getFullYear()
 
-    const additionalInfo = document.createElement('span');
+    const additionalInfo = document.createElement('div');
     additionalInfo.classList.add('MUxGbd', 'wuQ4Ob', 'WZ8Tjf');
     const boldPoints = document.createElement('em');
-    boldPoints.textContent = prettyNumber(data.score);
+    boldPoints.textContent = data.score.toLocaleString(locale);
     additionalInfo.append(`${prettyDate} · `);
     additionalInfo.append(boldPoints);
-    additionalInfo.append(` point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${prettyNumber(data.num_comments)} comment${data.num_comments === 1 ? '' : 's'} — `);
+    additionalInfo.append(` point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${data.num_comments.toLocaleString(locale)} comment${data.num_comments === 1 ? '' : 's'}`);
 
-    description.prepend(additionalInfo)
+    preview.prepend(additionalInfo)
   }
 
   function decodeHtmlEntity(text) {
     const textArea = document.createElement('textarea');
     textArea.innerHTML = text;
     return textArea.value;
-  }
-
-  const prettyNumber = (num) => {
-    // return num > 999 ? ((num / 1000).toFixed(1)) + 'k' : num;
-    if (num > 9999) { return ((num / 1000).toFixed(0)) + 'k' }
-    else if (num > 999) { return ((num / 1000).toFixed(1)) + 'k' }
-    else return num;
   }
 
   // Run script once on document ready
