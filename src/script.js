@@ -70,27 +70,24 @@ if (typeof trustedTypes !== 'undefined') {
         if (link.length < 1) return result.dataset.rsog = true;
 
         const linkHrefText = link[0].getAttribute('href');
-        const linkElementsArray = linkHrefText.match(/.*\.reddit\.com\/(r|t|user)\/(.*?)\/((.*?)\/.*|$)/);
+        const linkElementsArray = linkHrefText.match(/.*\.reddit\.com\/(r|t|user)\/([^\/]+)(?:\/(\w+)(?:\/(\w+)|$|\/)|$|\/)/);
         if (linkElementsArray.length < 1) return;
 
-        if (linkElementsArray[4] === 'comments') {
-          const postId = linkHrefText.match(/comments\/(.*?)\/(?:.*)\//)[1];
-          postIdArr.push('t3_' + postId);
-          result.dataset.postId = postId;
-        }
-
-        const arrowText = ' › ';
+        const caret = ' › ';
         const subredditText = linkElementsArray[1].charAt(0) + '/' + linkElementsArray[2];
-        let pathText = linkElementsArray[4];
+        let pathPrimary = linkElementsArray[3] ?? '';
+        let pathSecondary = linkElementsArray[4];
+        let pathDisplay = pathPrimary;
 
-        if (pathText) {
-          if (pathText === 'wiki') {
-            pathText = arrowText + linkElementsArray[3].replace(/\//, arrowText).replace(/\//, '');
-          } else {
-            pathText = arrowText + pathText;
-          }
-        } else {
-          pathText = ''
+        switch (pathPrimary) {
+          case 'wiki':
+            pathDisplay = caret + pathPrimary + caret + pathSecondary;
+            break;
+          case 'comments':
+            postIdArr.push('t3_' + pathSecondary);
+            result.dataset.postId = pathSecondary;
+            pathDisplay = caret + pathPrimary;
+            break;
         }
 
         const breadcrumbs = result.querySelectorAll('span[role="text"]');
@@ -101,9 +98,9 @@ if (typeof trustedTypes !== 'undefined') {
             subredditSpan.style.letterSpacing = '0.3px';
             subredditSpan.classList.add('lyLwlc');
             subredditSpan.textContent = subredditText;
-            breadcrumb.textContent = arrowText;
+            breadcrumb.textContent = caret;
             breadcrumb.appendChild(subredditSpan);
-            breadcrumb.appendChild(document.createTextNode(pathText));
+            breadcrumb.appendChild(document.createTextNode(pathDisplay));
           })
         }
 
@@ -132,12 +129,21 @@ if (typeof trustedTypes !== 'undefined') {
     title.title = decodeHtmlEntity(data.title);
 
     const preview = result.querySelectorAll(['div[data-content-feature="1"], div[data-content-feature="2"].VGXe8'])[0];
+    const description = preview.querySelector('div.VwiC3b');
 
     const existingDatesArr = result.querySelectorAll('.MUxGbd.wuQ4Ob.WZ8Tjf');
     if (existingDatesArr.length > 0) {
-      existingDatesArr.forEach((el) => {
-        el.remove();
+      existingDatesArr.forEach((existingDate) => {
+        existingDate.remove();
       })
+    }
+
+    //cleanup existing vote and comment count from description text
+    const repRegx = /^\d+(?:\.\dK |K | )vote[s]?, \d+(?:\.\dK |K | )comment[s]?. /;
+    if (description.firstChild.innerHTML) {
+      description.firstChild.innerHTML = description.firstChild.innerHTML.replace(repRegx, '');
+    } else {
+      description.firstChild.textContent = description.firstChild.textContent.replace(repRegx, '');
     }
 
     const fluff = result.querySelector('[data-content-feature="2"]:not(.VGXe8)');
@@ -145,19 +151,30 @@ if (typeof trustedTypes !== 'undefined') {
 
     const locale = document.documentElement.lang;
     const timestamp = new Date(data.created * 1000);
-    const formattedDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: "short" }) + ' ' + timestamp.getFullYear()
+    const prettyDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: "short" }) + ' ' + timestamp.getFullYear()
 
-    const additionalInfo = document.createElement('div');
+    const additionalInfo = document.createElement('span');
     additionalInfo.classList.add('MUxGbd', 'wuQ4Ob', 'WZ8Tjf');
-    additionalInfo.append(`${formattedDate} · ${data.score.toLocaleString(locale)} point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${data.num_comments.toLocaleString(locale)} comment${data.num_comments === 1 ? '' : 's'}`);
+    const boldPoints = document.createElement('em');
+    boldPoints.textContent = prettyNumber(data.score);
+    additionalInfo.append(`${prettyDate} · `);
+    additionalInfo.append(boldPoints);
+    additionalInfo.append(` point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${prettyNumber(data.num_comments)} comment${data.num_comments === 1 ? '' : 's'} — `);
 
-    preview.prepend(additionalInfo)
+    description.prepend(additionalInfo)
   }
 
   function decodeHtmlEntity(text) {
     const textArea = document.createElement('textarea');
     textArea.innerHTML = text;
     return textArea.value;
+  }
+
+  const prettyNumber = (num) => {
+    // return num > 999 ? ((num / 1000).toFixed(1)) + 'k' : num;
+    if (num > 9999) { return ((num / 1000).toFixed(0)) + 'k' }
+    else if (num > 999) { return ((num / 1000).toFixed(1)) + 'k' }
+    else return num;
   }
 
   // Run script once on document ready
