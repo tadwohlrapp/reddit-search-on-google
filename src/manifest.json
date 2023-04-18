@@ -13,6 +13,12 @@
     "128": "icon128.png"
   },
   "host_permissions": ["https://api.reddit.com/api/info/*"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{a34fce4f-655b-47dc-9dfa-9f9e1edee5b2}",
+      "strict_min_version": "109.0"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
