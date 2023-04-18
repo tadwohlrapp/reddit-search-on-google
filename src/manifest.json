@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
@@ -12,12 +12,7 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{a34fce4f-655b-47dc-9dfa-9f9e1edee5b2}"
-    }
-  },
-  "permissions": ["https://api.reddit.com/api/info/*"],
+  "host_permissions": ["https://api.reddit.com/api/info/*"],
   "content_scripts": [
     {
       "matches": [
@@ -213,6 +208,7 @@
         "*://*.google.cat/search*"
       ],
       "js": ["script.js"],
+      "css": ["style.css"],
       "run_at": "document_end"
     }
   ]
