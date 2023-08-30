@@ -14,6 +14,9 @@ if (typeof trustedTypes !== 'undefined') {
 (function () {
   'use strict'
 
+  // Detect Google's new infinite scroll SERP
+  const isInfinite = !document.querySelector('div[role="navigation"] > table')
+
   // Element
   const el = document.createElement('div')
   el.classList.add('rs-el')
@@ -54,13 +57,13 @@ if (typeof trustedTypes !== 'undefined') {
   searchBarElementWrapper.insertBefore(el, searchBarElementWrapper.children[placeIndex])
 
   function enhanceResults() {
-    const results = document.querySelectorAll('#search div:not(.hlcw0c)>div.MjjYud:not([data-rsog]), #search div.hlcw0c div.g>div:first-child:not([data-rsog]), #search .MjjYud ul.FxLDp li.MYVUIe:not([data-rsog])')
+    const results = document.querySelectorAll('#rcnt > #center_col div:not(.hlcw0c)>div.MjjYud:not([data-rsog]), #rcnt > #center_col div.hlcw0c div.g>div:first-child:not([data-rsog]), #rcnt > #center_col .MjjYud ul.FxLDp li.MYVUIe:not([data-rsog])')
 
     let postIdArr = []
     results.forEach((result) => {
       try {
         const link = result.querySelectorAll('a[href*="reddit.com/r/"][data-ved], a[href*="reddit.com/t/"][data-ved], a[href*="reddit.com/user/"][data-ved]')
-        if (link.length < 1) return result.dataset.rsog = true
+        if (link.length < 1) return result.dataset.rsog = false
 
         const linkHrefText = link[0].getAttribute('href')
         const linkElementsArray = linkHrefText.match(/.*\.reddit\.com\/(r|t|user)\/([^\/]+)(?:\/(\w+)(?:\/(\w+)|$|\/)|$|\/)/)
@@ -121,8 +124,21 @@ if (typeof trustedTypes !== 'undefined') {
     const title = result.querySelector('h3')
     title.title = decodeHtmlEntity(data.title)
 
-    const preview = result.querySelectorAll(['div[data-sncf="1"], div[data-content-feature="1"], div[data-sncf="2"].VGXe8, div[data-content-feature="2"].VGXe8'])[0]
-    const description = preview.querySelector('div.VwiC3b')
+    const previewDivArr = result.querySelectorAll('div[data-sncf="1"], div[data-content-feature="1"], div[data-sncf="2"], div[data-content-feature="2"]')
+    if (previewDivArr.length < 1) return
+
+    let longestTextContent = 0
+    let preview = previewDivArr[0]
+
+    previewDivArr.forEach((previewDiv) => {
+      const text = previewDiv.textContent
+      if (text.length > longestTextContent) {
+        longestTextContent = text.length;
+        preview = previewDiv;
+      }
+    })
+
+    const description = preview.querySelectorAll('div.VwiC3b, div.IsZvec')[0]
 
     const existingDatesArr = result.querySelectorAll('.MUxGbd.wuQ4Ob.WZ8Tjf')
     if (existingDatesArr.length > 0) {
@@ -131,7 +147,7 @@ if (typeof trustedTypes !== 'undefined') {
       })
     }
 
-    //cleanup existing vote and comment count from description text
+    // Cleanup existing vote and comment count from description text
     const repRegx = /^\d+(?:\.\dK |K | )vote[s]?, \d+(?:\.\dK |K | )comment[s]?. /
     if (description.firstChild.innerHTML) {
       description.firstChild.innerHTML = description.firstChild.innerHTML.replace(repRegx, '')
@@ -165,4 +181,12 @@ if (typeof trustedTypes !== 'undefined') {
 
   // Run script once on document ready
   enhanceResults()
+
+  if (isInfinite) {
+    // Add MutationObserver to detect loading of further search results on scrolling
+    const mutationObserver = new MutationObserver(enhanceResults);
+    const targetNode = document.querySelector('#rcnt > #center_col');
+    mutationObserver.observe(targetNode, { childList: true, subtree: true });
+  }
+
 })()
