@@ -186,7 +186,7 @@ if (typeof trustedTypes !== 'undefined') {
     }
     const boldPoints = document.createElement('em')
     boldPoints.textContent = data.score.toLocaleString(locale)
-    additionalInfo.append(`${prettyDate} — `)
+    additionalInfo.append(`${prettyDate} · `)
     additionalInfo.append(boldPoints)
     additionalInfo.append(` point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${data.num_comments.toLocaleString(locale)} comment${data.num_comments === 1 ? '' : 's'}`)
 
