@@ -1,4 +1,4 @@
-const queryRegex = /[&?]q=[^&]+/
+const queryRegex = /[&?]q=[^&#]+/
 const siteRegex = /\+site(?:%3A|\:).+\.[^&+]+/
 const redditRegex = /\+site(?:%3A|\:)reddit\.com/
 const redditUrl = '+site%3Areddit.com'
