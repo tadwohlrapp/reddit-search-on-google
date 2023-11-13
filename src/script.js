@@ -75,7 +75,7 @@ if (typeof trustedTypes !== 'undefined') {
   searchBarElementWrapper.insertBefore(el, searchBarElementWrapper.children[placeIndex])
 
   function enhanceResults() {
-    const results = document.querySelectorAll('#rcnt > #center_col div:not(.hlcw0c)>div.MjjYud:not([data-rsog]), #rcnt > #center_col div.hlcw0c div.g>div:first-child:not([data-rsog]), #rcnt > #center_col .MjjYud ul.FxLDp li.MYVUIe:not([data-rsog])')
+    const results = document.querySelectorAll('#rcnt > #center_col div:not(.hlcw0c):not(.ULSxyf)>div.MjjYud:not([data-rsog]), #rcnt > #center_col div.hlcw0c div.g>div:first-child:not([data-rsog]), #rcnt > #center_col .MjjYud ul.FxLDp li.MYVUIe:not([data-rsog]), #rcnt > #center_col #rso>.ULSxyf>.MjjYud div.TzHB6b.cLjAic.K7khPe:not([data-rsog])')
 
     let postIdArr = []
     results.forEach((result) => {
