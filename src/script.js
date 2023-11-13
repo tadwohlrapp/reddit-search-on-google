@@ -6,6 +6,24 @@ let redditIcon = '<svg focusable="false" xmlns="http://www.w3.org/2000/svg" view
 const isImageSearch = /[?&]tbm=isch/.test(location.search)
 const isActive = redditRegex.test(location.search.match(queryRegex)[0])
 
+// Google tends to change its CSS class names fairly often,
+// on top of various A/B tests, which requires regular updates to rsog.
+// For now let's check the current DateElement classes manually, but:
+// TODO: evaluate a smarter approach to get the class names of all relevant elements (API?).
+const possibleDateElementClassNames = ["lhLbod", "gEBHYd", "MUxGbd", "wuQ4Ob", "WZ8Tjf"]
+const dateElementClasses = { "array": [], "string": "" }
+for (className of possibleDateElementClassNames) {
+  const validDateElement = document.querySelector(`.${className}`)
+  if (validDateElement) {
+    const valuesIterator = validDateElement.classList.values();
+    for (const value of valuesIterator) {
+      dateElementClasses.array.push(value)
+      dateElementClasses.string += `.${value}`
+    }
+    break
+  }
+}
+
 if (typeof trustedTypes !== 'undefined') {
   const policy = trustedTypes.createPolicy('html', { createHTML: input => input })
   redditIcon = policy.createHTML(redditIcon)
@@ -140,7 +158,7 @@ if (typeof trustedTypes !== 'undefined') {
 
     const description = preview.querySelectorAll('div.VwiC3b, div.IsZvec')[0]
 
-    const existingDatesArr = result.querySelectorAll('.MUxGbd.wuQ4Ob.WZ8Tjf')
+    const existingDatesArr = result.querySelectorAll(dateElementClasses.string)
     if (existingDatesArr.length > 0) {
       existingDatesArr.forEach((existingDate) => {
         existingDate.remove()
@@ -163,10 +181,12 @@ if (typeof trustedTypes !== 'undefined') {
     const prettyDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: "short" }) + ' ' + timestamp.getFullYear()
 
     const additionalInfo = document.createElement('div')
-    additionalInfo.classList.add('MUxGbd', 'wuQ4Ob', 'WZ8Tjf')
+    for (const dateElementClass of dateElementClasses.array) {
+      additionalInfo.classList.add(dateElementClass)
+    }
     const boldPoints = document.createElement('em')
     boldPoints.textContent = data.score.toLocaleString(locale)
-    additionalInfo.append(`${prettyDate} · `)
+    additionalInfo.append(`${prettyDate} — `)
     additionalInfo.append(boldPoints)
     additionalInfo.append(` point${data.score === 1 ? '' : 's'} (${Math.round(data.upvote_ratio * 100)}% upvoted) · ${data.num_comments.toLocaleString(locale)} comment${data.num_comments === 1 ? '' : 's'}`)
 
