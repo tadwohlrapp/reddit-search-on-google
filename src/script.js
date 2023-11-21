@@ -10,15 +10,14 @@ const isActive = redditRegex.test(location.search.match(queryRegex)[0])
 // on top of various A/B tests, which requires regular updates to rsog.
 // For now let's check the current DateElement classes manually, but:
 // TODO: evaluate a smarter approach to get the class names of all relevant elements (API?).
-const possibleDateElementClassNames = ["lhLbod", "gEBHYd", "MUxGbd", "wuQ4Ob", "WZ8Tjf"]
-const dateElementClasses = { "array": [], "string": "" }
+const possibleDateElementClassNames = ['lhLbod', 'gEBHYd', 'MUxGbd', 'wuQ4Ob', 'WZ8Tjf']
+let dateElementClasses = ''
 for (className of possibleDateElementClassNames) {
   const validDateElement = document.querySelector(`.${className}`)
   if (validDateElement) {
-    const valuesIterator = validDateElement.classList.values();
+    const valuesIterator = validDateElement.classList.values()
     for (const value of valuesIterator) {
-      dateElementClasses.array.push(value)
-      dateElementClasses.string += `.${value}`
+      dateElementClasses += '.' + value
     }
     break
   }
@@ -158,11 +157,15 @@ if (typeof trustedTypes !== 'undefined') {
 
     const description = preview.querySelectorAll('div.VwiC3b, div.IsZvec')[0]
 
-    const existingDatesArr = result.querySelectorAll(dateElementClasses.string)
-    if (existingDatesArr.length > 0) {
-      existingDatesArr.forEach((existingDate) => {
-        existingDate.remove()
-      })
+    try {
+      const existingDatesArr = result.querySelectorAll(dateElementClasses)
+      if (existingDatesArr.length > 0) {
+        existingDatesArr.forEach((existingDate) => {
+          existingDate.remove()
+        })
+      }
+    } catch {
+      console.info('Search result description didn\'t include a date.')
     }
 
     // Cleanup existing vote and comment count from description text
@@ -178,12 +181,11 @@ if (typeof trustedTypes !== 'undefined') {
 
     const locale = document.documentElement.lang
     const timestamp = new Date(data.created * 1000)
-    const prettyDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: "short" }) + ' ' + timestamp.getFullYear()
+    const prettyDate = timestamp.getDate() + ' ' + timestamp.toLocaleString(locale, { month: 'short' }) + ' ' + timestamp.getFullYear()
 
     const additionalInfo = document.createElement('div')
-    for (const dateElementClass of dateElementClasses.array) {
-      additionalInfo.classList.add(dateElementClass)
-    }
+    additionalInfo.classList.add('rs-meta')
+
     const boldPoints = document.createElement('em')
     boldPoints.textContent = data.score.toLocaleString(locale)
     additionalInfo.append(`${prettyDate} · `)

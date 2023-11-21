@@ -3,7 +3,7 @@
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": "Tad Wohlrapp",
   "homepage_url": "https://www.rsog.org/",
   "icons": {

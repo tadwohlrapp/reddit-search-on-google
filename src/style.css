@@ -10,3 +10,11 @@
 .rs-icon:hover {
   opacity: 1;
 }
+
+.rs-meta {
+  color: #70757a;
+}
+
+body[data-dt='1'] .rs-meta {
+  color: #9aa0a6;
+}
